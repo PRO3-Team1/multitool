@@ -35,7 +35,9 @@
 #include "us_timer.h"
 #include "tone.h"
 #include "adc.h"
+#include "button.h"
 
+char func_strings[3][5] = { "SQRE", "RAMP", "SINE" };
 void multimeter() {
 	unsigned int adc_val, adc_val2;
 
@@ -58,24 +60,48 @@ void multimeter() {
 	set_line(1);
 	sprintf(line1, "P20: %4u mV    ", adc_val2);
 	string_to_LCD(line1);
-	//memset(line1,'\0',sizeof(line1));
+
 	delay_ms(200);
 
 }
 
 void tone_generator() {
-	set_tone(1, SINE);
-	int freq=0;
-	char line0[16];
-	char line1[16];
+	wavetype function = RAMP;
+	set_tone(1, function);
+	int freq = 1000;
+	char line0[17];
+	char line1[17];
 
 	set_line(0);
 	sprintf(line0, "mode:1 frq:2u 3n");
 	string_to_LCD(line0);
 
 	set_line(1);
-	sprintf(line1, "SINE  :%6d Hz",freq);
+	sprintf(line1, "%s  :%6d Hz", func_strings[function], freq);
 	string_to_LCD(line1);
+}
+
+void button_test() {
+	int count=0;
+	while(1)
+	{
+
+
+		if(count>2)
+		{
+			count=0;
+		}
+
+		if(button_get(count))
+		{
+		printf("Button number %d is true \n",count);
+		}
+		else{
+			printf("Button number %d is false \n",count);
+		}
+		delay_ms(1000);
+		count++;
+	}
 }
 
 int main(void) {
@@ -84,10 +110,19 @@ int main(void) {
 	Board_Init();
 	delay_ms(1000);
 
+	Chip_GPIO_Init(LPC_GPIO);
+	Chip_IOCON_Init(LPC_IOCON);
+	button_init();
+	button_test();
+
 	lcd_init();
 	adc_init();
 	tone_init();
 	us_timer_init();
+
+
+
+
 	int switch0 = 1;
 
 	while (1) {

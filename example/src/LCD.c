@@ -118,8 +118,7 @@ void clear_mode(void) {
 
 void lcd_init(void) {
 	delay_ms(10);
-	Chip_GPIO_Init(LPC_GPIO);
-	Chip_IOCON_Init(LPC_IOCON);
+
 
 	controlpin_output();
 	datapin_output();

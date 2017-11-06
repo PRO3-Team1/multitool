@@ -50,7 +50,7 @@ void us_timer_init (void)
 	/* Timer setup for match and interrupt at 1KHz */
 	Chip_TIMER_Reset (LPC_TIMER0);
 	Chip_TIMER_MatchEnableInt (LPC_TIMER0, 1);
-	Chip_TIMER_SetMatch (LPC_TIMER0, 1, (timerFreq / 1000000));
+	Chip_TIMER_SetMatch (LPC_TIMER0, 1, (timerFreq / 10000));
 	Chip_TIMER_ResetOnMatchEnable (LPC_TIMER0, 1);
 	Chip_TIMER_Enable (LPC_TIMER0);
 
