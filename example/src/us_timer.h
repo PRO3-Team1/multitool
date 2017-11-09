@@ -9,7 +9,7 @@
 #define US_TIMER_H_
 
 void us_timer_init(void);
-void us_timer_start(void);
+void us_timer_start(int count_to, void callback(void));
 
 
 #endif /* MS_TIMER_H_ */

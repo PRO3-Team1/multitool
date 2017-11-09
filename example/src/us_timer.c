@@ -8,11 +8,10 @@
 #include "board.h"
 #include "tone.h"
 
-/* Module Global variables */
-static volatile unsigned int usCount;
+static void (*timer_callback)(void);
 
 /**
- * @brief	Handle 1uS irq from 32-bit timer
+ * @brief	Handle irq from 32-bit timer
  * @return	Nothing
  */
 void TIMER0_IRQHandler (void)
@@ -23,11 +22,10 @@ void TIMER0_IRQHandler (void)
 		/* Yep, acknowledge and clear periphereal*/
 		Chip_TIMER_ClearMatch (LPC_TIMER0, 1);
 
-		/* increment mS counter */
-		usCount++;
-
-		//TODO, add callback, so timer does not have to include tone.h
-		playNextSample();
+		if(timer_callback)
+		{
+			(*timer_callback)();
+		}
 	}
 
 }
@@ -50,9 +48,8 @@ void us_timer_init (void)
 	/* Timer setup for match and interrupt at 1KHz */
 	Chip_TIMER_Reset (LPC_TIMER0);
 	Chip_TIMER_MatchEnableInt (LPC_TIMER0, 1);
-	Chip_TIMER_SetMatch (LPC_TIMER0, 1, (timerFreq / 10000));
+	Chip_TIMER_SetMatch (LPC_TIMER0, 1, (timerFreq / 120000));
 	Chip_TIMER_ResetOnMatchEnable (LPC_TIMER0, 1);
-	Chip_TIMER_Enable (LPC_TIMER0);
 
 	/* Enable timer interrupt */
 	NVIC_ClearPendingIRQ (TIMER0_IRQn);
@@ -63,8 +60,11 @@ void us_timer_init (void)
  * @brief starts timer, NOTE does NOT reset the counter value
  * @return	Nothing
  */
-void us_timer_start (void)
+void us_timer_start(int count_to, void callback(void))
 {
 	/* tell HW to start counting*/
+	Chip_TIMER_Disable (LPC_TIMER0);
+	timer_callback = callback;
+	Chip_TIMER_SetMatch (LPC_TIMER0, 1, count_to);
 	Chip_TIMER_Enable(LPC_TIMER0);
 }

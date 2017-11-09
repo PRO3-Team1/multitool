@@ -1,6 +1,7 @@
 #include <math.h>
 #include "tone.h"
 #include "board.h"
+#include "us_timer.h"
 
 #define NUM_STEPS (64)
 
@@ -9,12 +10,11 @@
 #define PI (3.1415927)
 
 wavetype toneType = SINE;
-int sample;
+
 int step;
-int period;
-int period_count=0;
 int sine_table[NUM_STEPS];
 
+void playNextSample (void);
 /**
  * @brief initialize sinewave lookuptable, to avoid computing sin()
  * on every function call, when generating samples
@@ -40,18 +40,15 @@ void tone_init (void)
 	sinewave_init ();
 }
 
-
-void set_tone (int period_us, wavetype wave)
+void tone_set (int freq, wavetype wave)
 {
-	period=period_us;
+	us_timer_start(120000000 / freq / NUM_STEPS, &playNextSample);
 	step = 0;
 	toneType = wave;
 }
-
 void playNextSample (void)
 {
-
-
+	int sample;
 	step++;
 
 	if (step >= NUM_STEPS)
