@@ -9,27 +9,39 @@
 
 void button_init() {
 
-	/* Setup DAC pins for pin 0.26 -AOUT, P18 on the LPC4088 QSB
-	 * see section 7.3 in UM10562 for details, table 85 & 86  */
-	Chip_IOCON_PinMuxSet(LPC_IOCON, BTN0PORT, BTN0PIN, IOCON_FUNC0);
-	Chip_IOCON_PinMuxSet(LPC_IOCON, BTN1PORT, BTN1PIN, IOCON_FUNC0);
-	Chip_IOCON_PinMuxSet(LPC_IOCON, BTN2PORT, BTN2PIN, IOCON_FUNC0);
+	//Um10562. UM10562. Table 16.
+	LPC_SYSCTL->PCONP |= 1 <<15;
 
-	Chip_GPIO_SetPinDIRInput(LPC_GPIO, BTN0PORT,BTN0PIN);
-	Chip_GPIO_SetPinDIRInput(LPC_GPIO, BTN1PORT,BTN1PIN);
-	Chip_GPIO_SetPinDIRInput(LPC_GPIO, BTN2PORT,BTN2PIN);
+	//FUNC 00 + PULL DOWN + DIGITAL MODE. UM10562. Table 85
+	LPC_IOCON->p[BTN0PORT][BTN0PIN] = 0X88;
 
+	//Set as input. UM10562. Table 86
+	LPC_GPIO[BTN0PORT].DIR &= ~(1UL << BTN0PIN);
+
+	LPC_IOCON->p[BTN1PORT][BTN1PIN] = 0X88;
+	LPC_GPIO[BTN1PORT].DIR &= ~(1UL << BTN1PIN);
+
+	LPC_IOCON->p[BTN2PORT][BTN2PIN] = 0x88;
+	LPC_GPIO[BTN2PORT].DIR &= ~(1UL << BTN2PIN);
 }
 
-bool button_get(int btn)
-{
-	switch (btn)
+
+
+int button_get(enum button_t btn) {
+	switch(btn)
 	{
-	case 1:
-		return Chip_GPIO_GetPinState(LPC_GPIO, BTN1PORT, BTN1PIN);
-	case 2:
-		return Chip_GPIO_GetPinState(LPC_GPIO, BTN2PORT, BTN2PIN);
+	case BTN_0:
+		return BTN0GET();
+		break;
+	case BTN_1:
+		return BTN1GET();
+		break;
+	case BTN_2:
+		return BTN2GET();
+		break;
+
 	default:
-		return Chip_GPIO_GetPinState(LPC_GPIO, BTN0PORT, BTN0PIN);
+		return 0;
 	}
+
 }
