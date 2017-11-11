@@ -11,15 +11,14 @@
 #include "adc.h"
 #include "button.h"
 
-char func_strings[3][5] = {"SQRE", "RAMP", "SINE" };
+char func_strings[3][5] = { "SQRE", "RAMP", "SINE" };
 
 /**
  * Performs ADC conversion on both channels and sends to display
  */
-void multimeter() {
-	puts("Multimeter");
+void voltmeter() {
+	puts("Voltmeter");
 	unsigned int adc_val;
-
 	char display[17];
 
 	set_line(0);
@@ -53,20 +52,21 @@ void tone_generator(wavetype function, int frequency) {
 	string_to_LCD(display);
 }
 
-
-int main(void) {
+void init() {
 	SystemCoreClockUpdate();
 	Board_Init();
-	delay_ms(100);
-
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_IOCON_Init(LPC_IOCON);
 	button_init();
-
 	lcd_init();
 	adc_init();
 	tone_init();
 	us_timer_init();
+}
+
+int main(void) {
+
+	init();
 
 	int mode = 3;
 	int old_mode = 3;
@@ -74,33 +74,27 @@ int main(void) {
 	int old_freqency = 999;
 	//Our main loop
 	while (1) {
-		if(button_get(0))
-		{
+		if (button_get(0)) {
 			puts("Button MODE");
 			mode++;
-			if(mode >=4) {
+			if (mode >= 4) {
 				mode = 0;
 			}
 		}
 
-		if(button_get(1))
-		{
+		if (button_get(1)) {
 			puts("Button UP");
-			frequency +=10;
+			frequency += 100;
 		}
-		if(button_get(2))
-		{
+		if (button_get(2)) {
 			puts("Button DOWN");
-			frequency -= 10;
+			frequency -= 100;
 		}
 
-		if(mode == 3)
-		{
-			multimeter();
-		}
-		else
-		{ //Function generatormode (Only do this if there is a change)
-			if(mode!=old_mode || frequency != old_freqency) {
+		if (mode == 3) {
+			voltmeter();
+		} else { //Function generatormode (Only do this if there is a change)
+			if (mode != old_mode || frequency != old_freqency) {
 				printf("Setting new tone: %d,%d\n", mode, frequency);
 				tone_generator(mode, frequency);
 				old_mode = mode;

@@ -5,8 +5,8 @@
 
 #define NUM_STEPS (64)
 
-//It is a 10 bit DAC.
-#define MAX_DAC_CODE (0x400)
+//It is a 10 bit DAC. 1023 is max.
+#define MAX_DAC_CODE (1024-1)
 #define PI (3.1415927)
 
 wavetype toneType = SINE;
@@ -42,7 +42,8 @@ void tone_init (void)
 
 void tone_set (int freq, wavetype wave)
 {
-	us_timer_start(120000000 / freq / NUM_STEPS, &playNextSample);
+	//why is it 2*NUM_STEPS and not just NUM_STEPS?
+	us_timer_start(120000000 / freq / (2*NUM_STEPS), &playNextSample);
 	step = 0;
 	toneType = wave;
 }

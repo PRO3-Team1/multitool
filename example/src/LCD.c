@@ -83,10 +83,10 @@ void setbus(char c) {
 void toggle_enable(void) {
 
 	Chip_GPIO_SetPinState(LPC_GPIO, ENABLE_PORT, ENABLE_PIN, 1);
-	delay_ms(10);
+	delay_ms(1);
 
 	Chip_GPIO_SetPinState(LPC_GPIO, ENABLE_PORT, ENABLE_PIN, 0);
-	delay_ms(10);
+	delay_ms(1);
 }
 
 void lcd_write(char c) {
@@ -117,9 +117,6 @@ void clear_mode(void) {
 }
 
 void lcd_init(void) {
-	delay_ms(10);
-
-
 	controlpin_output();
 	datapin_output();
 	command_mode();
