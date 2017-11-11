@@ -17,6 +17,7 @@ char func_strings[3][5] = {"SQRE", "RAMP", "SINE" };
  * Performs ADC conversion on both channels and sends to display
  */
 void multimeter() {
+	puts("Multimeter");
 	unsigned int adc_val;
 
 	char display[17];
