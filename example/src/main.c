@@ -3,7 +3,6 @@
  */
 
 #include <stdio.h>
-
 #include "board.h"
 #include "LCD.h"
 #include "us_timer.h"
@@ -87,8 +86,8 @@ int main(void) {
 			frequency += 100;
 		}
 		if (button_get(2)) {
-			puts("Button DOWN");
-			frequency -= 100;
+				puts("Button DOWN");
+				frequency -= 100;
 		}
 
 		if (mode == 3) {

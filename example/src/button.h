@@ -11,6 +11,7 @@
 #include "chip.h"
 #include "board.h"
 
+//P15-P17
 #define BTN0PORT 	0
 #define BTN0PIN		23
 

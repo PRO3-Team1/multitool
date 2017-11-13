@@ -43,8 +43,6 @@ void adc_init (void)
 	/*	3. Pins: Enable ADC0 pins and pin modes for the port pins with ADC0 functions through
 	 *	the relevant IOCON registers (Section 7.4.1).*/
 
-	/* Use ADC channel 0 - P15 on the mBed, P0.23 on the LPC4088, see table85, P138 in the UM for details */
-	//LPC_IOCON->p[0][23] = 0x00000001;
 	/* Use ADC channel 1 - P19 on the mBed, P1.30 on the LPC4088, see table85, P138 in the UM for details */
 	LPC_IOCON->p[1][30] = FUNC;
 	//	/* Use ADC channel 0 - P20 on the mBed, P1.31 on the LPC4088, see table85, P138 in the UM for details */

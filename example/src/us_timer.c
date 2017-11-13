@@ -6,7 +6,7 @@
  */
 #include <stdio.h>
 #include "board.h"
-#include "tone.h"
+
 
 static void (*timer_callback)(void);
 
