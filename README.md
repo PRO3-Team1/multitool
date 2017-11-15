@@ -2,6 +2,10 @@
 
 | LPC pin | port.pin |       Function       | Module |
 |---------|----------|----------------------|--------|
+| P11     |      0.9 | SPI,MOSI             | SPI    |
+| P12     |      0.8 | SPI,MISO             | SPI    |
+| P13     |      0.7 | SPI,CLK              | SPI    |
+| P14     |      0.6 | SPI,SEL              | SPI    |
 | P15     |     0.23 | GPIO-Input           | button |
 | P16     |     0.24 | GPIO-Input           | button |
 | p17     |     0.25 | GPIO-Input           | button |
