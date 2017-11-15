@@ -9,6 +9,7 @@
 #include "tone.h"
 #include "adc.h"
 #include "button.h"
+#include "spi.h"
 
 char func_strings[3][5] = { "SQRE", "RAMP", "SINE" };
 
@@ -23,13 +24,30 @@ void voltmeter() {
 	set_line(0);
 	/* read from the adc*/
 	adc_val = adc_read(4);
+
+	//Send measurement over SPI
+	spi_start();
+	spi_xfer(1);
+	spi_xfer(adc_val >> 8);
+	spi_xfer(adc_val);
+	spi_stop();
+
 	adc_val++; //One extra for a more accurate readout
 	adc_val = cal_val(adc_val);
 	sprintf(display, "P19: %4u mV    ", adc_val);
 	string_to_LCD(display);
 
+
+
 	/* read from the other adc*/
 	adc_val = adc_read(5);
+	//Send measurement over SPI also
+	spi_start();
+	spi_xfer(2);
+	spi_xfer(adc_val >> 8);
+	spi_xfer(adc_val);
+	spi_stop();
+
 	adc_val++;
 	adc_val = cal_val(adc_val);
 
@@ -61,6 +79,7 @@ void init() {
 	adc_init();
 	tone_init();
 	us_timer_init();
+	spi_init();
 }
 
 int main(void) {

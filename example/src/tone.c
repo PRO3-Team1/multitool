@@ -42,8 +42,8 @@ void tone_init (void)
 
 void tone_set (int freq, wavetype wave)
 {
-	//why is it 2*NUM_STEPS and not just NUM_STEPS?
-	us_timer_start(120000000 / freq / (2*NUM_STEPS), &playNextSample);
+	//We divide by two because the APB pheripihal clock has a CLKDIV of 2
+	us_timer_start(120000000 / freq / 2 / NUM_STEPS, &playNextSample);
 	step = 0;
 	toneType = wave;
 }
@@ -71,7 +71,6 @@ void playNextSample (void)
 	}
 
 	Chip_DAC_UpdateValue (LPC_DAC, sample);
-
 }
 
 
